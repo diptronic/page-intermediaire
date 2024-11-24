@@ -26,6 +26,10 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #e6b800;
         }
         button:disabled {
             background-color: grey;
@@ -34,20 +38,33 @@
         a {
             text-decoration: none;
         }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .message {
+            margin-top: 20px;
+            color: #8B4513;
+        }
     </style>
 </head>
 <body>
-    <h1>Merci pour votre visite chez HappyLemon !</h1>
-    <p>Laissez un avis 5 étoiles sur Google pour accéder à notre jeu et tenter de gagner un cadeau 🎁.</p>
-    <!-- Lien vers la page d'avis Google -->
-    <a href="https://g.page/r/CZO81H5HBAIzEBE/review" target="_blank">
-        <button id="reviewButton">Laisser un Avis</button>
-    </a>
-    <p>Après avoir laissé votre avis, cliquez sur le bouton ci-dessous :</p>
-    <!-- Lien vers la page du jeu Pile ou Face -->
-    <a href="https://diptronic.github.io/happy-lemon-roulette/">
-        <button id="playButton" disabled>Jouer maintenant</button>
-    </a>
+    <div class="container">
+        <h1>Merci pour votre visite chez HappyLemon !</h1>
+        <p>Laissez un avis 5 étoiles sur Google pour accéder à notre jeu et tenter de gagner un cadeau 🎁.</p>
+        
+        <!-- Lien vers la page d'avis Google -->
+        <a href="https://g.page/r/CZO81H5HBAIzEBE/review" target="_blank">
+            <button id="reviewButton">Laisser un Avis</button>
+        </a>
+
+        <p class="message">Après avoir laissé votre avis, cliquez sur le bouton ci-dessous pour jouer :</p>
+        
+        <!-- Lien vers la page du jeu Pile ou Face -->
+        <a href="https://diptronic.github.io/happy-lemon-roulette/">
+            <button id="playButton" disabled>Jouer maintenant</button>
+        </a>
+    </div>
 
     <script>
         const reviewButton = document.getElementById('reviewButton');
@@ -56,23 +73,18 @@
         // Désactiver le bouton "Jouer maintenant" par défaut
         playButton.disabled = true;
 
-        // Vérifier auprès du backend si l'utilisateur peut jouer
-        fetch('https://votre-backend.wuaze.com/backend.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "already_played") {
-                    alert(data.message); // Affiche "Vous avez deja participe !"
-                    playButton.disabled = true; // Laisse le bouton désactivé
-                } else {
-                    playButton.disabled = false; // Active le bouton si l'utilisateur peut jouer
-                }
+        // Utilisation de la page intermédiaire pour contourner CORS
+        fetch('https://diptronic.github.io/cors-bypass.html')
+            .then(() => {
+                console.log("Redirection réussie !");
+                playButton.disabled = false; // Activer le bouton si la redirection est réussie
             })
             .catch(error => {
-                console.error("Erreur avec le backend :", error);
+                console.error("Erreur avec la redirection :", error);
                 alert("Une erreur est survenue. Veuillez réessayer plus tard.");
             });
 
-        // Optionnel : Ajouter une alerte lors du clic sur "Laisser un Avis"
+        // Ajouter une alerte lors du clic sur "Laisser un Avis"
         reviewButton.addEventListener('click', () => {
             alert("Merci de laisser un avis 5 étoiles sur Google !");
         });
