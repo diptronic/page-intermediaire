@@ -76,8 +76,13 @@
         // Gestion du clic sur "Laisser un Avis"
         reviewButton.addEventListener('click', () => {
             alert("Merci de laisser un avis 5 étoiles sur Google !");
-            // Vérifier auprès du backend après le clic
-            fetch('https://votre-backend.wuaze.com/backend.php')
+            
+            // Utiliser la page intermédiaire pour contourner CORS
+            fetch('https://diptronic.github.io/cors-bypass.html')
+                .then(() => {
+                    // Vérification auprès du backend via la redirection
+                    return fetch('https://votre-backend.wuaze.com/backend.php');
+                })
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "already_played") {
@@ -89,7 +94,7 @@
                     }
                 })
                 .catch(error => {
-                    console.error("Erreur avec le backend :", error);
+                    console.error("Erreur avec le backend ou la redirection :", error);
                     alert("Une erreur est survenue. Veuillez réessayer plus tard.");
                 });
         });
