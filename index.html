@@ -50,14 +50,31 @@
     </a>
 
     <script>
-        // Cible le bouton "Laisser un Avis"
         const reviewButton = document.getElementById('reviewButton');
         const playButton = document.getElementById('playButton');
 
-        // Activer le bouton "Jouer maintenant" lorsque "Laisser un Avis" est cliqué
+        // Désactiver le bouton "Jouer maintenant" par défaut
+        playButton.disabled = true;
+
+        // Vérifier auprès du backend si l'utilisateur peut jouer
+        fetch('http://votre-backend.wuaze.com/backend.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "already_played") {
+                    alert(data.message); // Affiche "Vous avez déjà participé !"
+                    playButton.disabled = true; // Laisse le bouton désactivé
+                } else {
+                    playButton.disabled = false; // Active le bouton si l'utilisateur peut jouer
+                }
+            })
+            .catch(error => {
+                console.error("Erreur avec le backend :", error);
+                alert("Une erreur est survenue. Veuillez réessayer plus tard.");
+            });
+
+        // Optionnel : Ajouter une alerte lors du clic sur "Laisser un Avis"
         reviewButton.addEventListener('click', () => {
             alert("Merci de laisser un avis 5 étoiles sur Google !");
-            playButton.disabled = false; // Activer le bouton "Jouer maintenant"
         });
     </script>
 </body>
