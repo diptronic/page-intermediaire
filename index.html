@@ -57,11 +57,11 @@
         playButton.disabled = true;
 
         // Vérifier auprès du backend si l'utilisateur peut jouer
-        fetch('http://votre-backend.wuaze.com/backend.php')
+        fetch('https://votre-backend.wuaze.com/backend.php')
             .then(response => response.json())
             .then(data => {
                 if (data.status === "already_played") {
-                    alert(data.message); // Affiche "Vous avez déjà participé !"
+                    alert(data.message); // Affiche "Vous avez deja participe !"
                     playButton.disabled = true; // Laisse le bouton désactivé
                 } else {
                     playButton.disabled = false; // Active le bouton si l'utilisateur peut jouer
