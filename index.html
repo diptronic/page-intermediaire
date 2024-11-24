@@ -73,20 +73,25 @@
         // Désactiver le bouton "Jouer maintenant" par défaut
         playButton.disabled = true;
 
-        // Utilisation de la page intermédiaire pour contourner CORS
-        fetch('https://diptronic.github.io/cors-bypass.html')
-            .then(() => {
-                console.log("Redirection réussie !");
-                playButton.disabled = false; // Activer le bouton si la redirection est réussie
-            })
-            .catch(error => {
-                console.error("Erreur avec la redirection :", error);
-                alert("Une erreur est survenue. Veuillez réessayer plus tard.");
-            });
-
-        // Ajouter une alerte lors du clic sur "Laisser un Avis"
+        // Gestion du clic sur "Laisser un Avis"
         reviewButton.addEventListener('click', () => {
             alert("Merci de laisser un avis 5 étoiles sur Google !");
+            // Vérifier auprès du backend après le clic
+            fetch('https://votre-backend.wuaze.com/backend.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "already_played") {
+                        alert("Vous avez déjà participé. Merci pour votre avis !");
+                        playButton.disabled = true; // Laisser le bouton désactivé
+                    } else if (data.status === "success") {
+                        playButton.disabled = false; // Activer le bouton si l'utilisateur peut jouer
+                        alert("Merci pour votre avis ! Vous pouvez maintenant jouer.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur avec le backend :", error);
+                    alert("Une erreur est survenue. Veuillez réessayer plus tard.");
+                });
         });
     </script>
 </body>
